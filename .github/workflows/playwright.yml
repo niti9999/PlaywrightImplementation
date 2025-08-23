@@ -82,7 +82,8 @@ jobs:
       - name: Merge reports
         run: |
           mkdir -p merged-results
-          cp -r ./results/* ./merged-results/ || echo "⚠️ No shard results found"
+          # Copy all JSON files from shard results into merged-results
+          find ./results -name '*.json' -exec cp {} ./merged-results/ \; || echo "⚠️ No shard results found"
           if ls merged-results/* 1> /dev/null 2>&1; then
             npx playwright merge-reports merged-results --reporter=html --output=playwright-report || echo "⚠️ Merge failed, check merged-results/"
           else
