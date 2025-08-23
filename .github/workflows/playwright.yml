@@ -54,6 +54,9 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
       - name: Download all shard reports
         uses: actions/download-artifact@v4
         with:
@@ -61,8 +64,10 @@ jobs:
 
       - name: Merge reports
         run: |
-          if ls ./results/* 1> /dev/null 2>&1; then
-            npx playwright merge-reports ./results/* --reporter=html || echo "⚠️ Merge failed, continuing"
+          mkdir -p merged-results
+          cp -r ./results/* ./merged-results/
+          if ls merged-results/* 1> /dev/null 2>&1; then
+            npx playwright merge-reports merged-results --reporter=html || echo "⚠️ Merge failed, continuing"
           else
             echo "⚠️ No results found, skipping merge"
           fi
