@@ -46,13 +46,13 @@ jobs:
 
       - name: Run Playwright tests (shard ${{ matrix.shard }})
         continue-on-error: true
+        env:
+          PLAYWRIGHT_BLOB_OUTPUT_DIR: results/shard-${{ matrix.shard }}
         run: |
-          # ensure per-shard output folder so JSON files don't overwrite each other
+          # ensure per-shard output folder so blob reports don't overwrite each other
           mkdir -p results/shard-${{ matrix.shard }}
-            # Run tests with the JSON reporter and save the JSON output to a file while
-            # still writing artifacts (traces/screenshots) into the shard folder.
-            # Using `tee` captures the JSON output to a file for later merging.
-            npx playwright test --shard=${{ matrix.shard }}/4 --reporter=json --output=results/shard-${{ matrix.shard }} | tee results/shard-${{ matrix.shard }}/test-results.json
+          # Run tests with blob reporter for merge-reports compatibility
+          npx playwright test --shard=${{ matrix.shard }}/4 --reporter=blob
 
       - name: Upload shard report
         if: always()
@@ -88,27 +88,27 @@ jobs:
       - name: Merge reports
         run: |
           mkdir -p merged-results
-          # Collect per-shard JSON result files into a single folder
-          find ./results -type f -name '*.json' -exec cp {} ./merged-results/ \; || echo "⚠️ No shard JSON files found"
+          # Copy all blob report zip files from shard results into merged-results
+          find ./results -type f -name "*.zip" -exec cp {} ./merged-results/ \; || echo "⚠️ No shard blob files found"
 
-          if ls merged-results/*.json 1> /dev/null 2>&1; then
-            echo "Found JSON files to merge:"
+          if ls merged-results/*.zip 1> /dev/null 2>&1; then
+            echo "Found blob files to merge:"
             ls -la merged-results || true
 
-            # Try merge-reports (if available). If it fails, fallback to show-report.
-            if npx playwright merge-reports merged-results --reporter=html --output=playwright-report 2>/dev/null; then
-              echo "✅ Merged HTML report created at playwright-report/"
-            else
-              echo "ℹ️ 'merge-reports' not available or failed, trying 'show-report' fallback"
-              if npx playwright show-report merged-results --output=playwright-report 2>/dev/null; then
-                echo "✅ Fallback report created at playwright-report/"
+            # Try merge-reports with blob files. No --output needed, creates playwright-report by default.
+            if npx playwright merge-reports merged-results --reporter=html 2>/dev/null; then
+              if [ -d playwright-report ]; then
+                echo "✅ Merged HTML report created at playwright-report/"
               else
-                echo "⚠️ Failed to generate merged report. Check contents of merged-results/"
-                ls -la merged-results || true
+                echo "ℹ️ merge-reports ran but no playwright-report directory was created"
+                ls -la . | grep playwright || true
               fi
+            else
+              echo "ℹ️ 'merge-reports' failed, trying fallback approaches"
+              ls -la merged-results || true
             fi
           else
-            echo "⚠️ No JSON results found in ./results — skipping merge"
+            echo "⚠️ No blob files found in ./results — skipping merge"
           fi
 
       - name: Upload merged report
