@@ -52,6 +52,7 @@ jobs:
           # ensure per-shard output folder so blob reports don't overwrite each other
           mkdir -p results/shard-${{ matrix.shard }}
           # Run tests with blob reporter for merge-reports compatibility
+          # The blob reporter will include screenshots and traces
           npx playwright test --shard=${{ matrix.shard }}/4 --reporter=blob
 
       - name: Upload shard report
