@@ -58,7 +58,7 @@
   - main [ref=e75]:
     - generic [ref=e76]:
       - generic [ref=e77]:
-        - heading "Discover new opportunities" [level=1] [ref=e78]
+        - heading "Explore jobs and grow your network" [level=1] [ref=e78]
         - generic [ref=e79]:
           - button "Continue with google" [ref=e81]:
             - iframe [ref=e83]:
@@ -88,7 +88,7 @@
           - text: New to LinkedIn?
           - link "Join now" [ref=e94] [cursor=pointer]:
             - /url: https://www.linkedin.com/signup
-      - img "Discover new opportunities" [ref=e95]
+      - img "Explore jobs and grow your network" [ref=e95]
     - generic [ref=e96]:
       - generic [ref=e97]:
         - heading "Explore collaborative articles" [level=2] [ref=e98]
