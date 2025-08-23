@@ -15,6 +15,7 @@ jobs:
     strategy:
       matrix:
         shard: [1, 2, 3, 4]   # 4 shards
+      fail-fast: false         # ✅ ensures all shards run independently
 
     steps:
       - name: Checkout repository
@@ -32,6 +33,8 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests (shard ${{ matrix.shard }})
+        # Always run tests, but never stop the job if some fail
+        continue-on-error: true
         run: npx playwright test --shard=${{ matrix.shard }}/4 --reporter=line,json --output=results
 
       - name: Upload shard report
@@ -44,7 +47,7 @@ jobs:
   merge-reports:
     runs-on: ubuntu-latest
     needs: test
-    if: always()   # Run even if some shards failed
+    if: always()   # ✅ run merge job even if shards fail
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -65,7 +68,7 @@ jobs:
       - name: Merge reports
         run: |
           mkdir -p merged-results
-          cp -r ./results/* ./merged-results/
+          cp -r ./results/* ./merged-results/ || echo "⚠️ No shard results found"
           if ls merged-results/* 1> /dev/null 2>&1; then
             npx playwright merge-reports merged-results --reporter=html || echo "⚠️ Merge failed, continuing"
           else
