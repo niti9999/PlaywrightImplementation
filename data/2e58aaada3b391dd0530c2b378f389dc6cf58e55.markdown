@@ -132,34 +132,34 @@
         - list [ref=e116]:
           - listitem:
             - link "Engineering" [ref=e117] [cursor=pointer]:
-              - /url: https://www.linkedin.com/jobs/engineering-jobs-boydton-va?trk=homepage-basic_suggested-search
+              - /url: https://www.linkedin.com/jobs/engineering-jobs-chicago-il?trk=homepage-basic_suggested-search
           - listitem:
             - link "Business Development" [ref=e118] [cursor=pointer]:
-              - /url: https://www.linkedin.com/jobs/business-development-jobs-boydton-va?trk=homepage-basic_suggested-search
+              - /url: https://www.linkedin.com/jobs/business-development-jobs-chicago-il?trk=homepage-basic_suggested-search
           - listitem:
             - link "Finance" [ref=e119] [cursor=pointer]:
-              - /url: https://www.linkedin.com/jobs/finance-jobs-boydton-va?trk=homepage-basic_suggested-search
+              - /url: https://www.linkedin.com/jobs/finance-jobs-chicago-il?trk=homepage-basic_suggested-search
           - listitem:
             - link "Administrative Assistant" [ref=e120] [cursor=pointer]:
-              - /url: https://www.linkedin.com/jobs/administrative-assistant-jobs-boydton-va?trk=homepage-basic_suggested-search
+              - /url: https://www.linkedin.com/jobs/administrative-assistant-jobs-chicago-il?trk=homepage-basic_suggested-search
           - listitem:
             - link "Retail Associate" [ref=e121] [cursor=pointer]:
-              - /url: https://www.linkedin.com/jobs/retail-associate-jobs-boydton-va?trk=homepage-basic_suggested-search
+              - /url: https://www.linkedin.com/jobs/retail-associate-jobs-chicago-il?trk=homepage-basic_suggested-search
           - listitem:
             - link "Customer Service" [ref=e122] [cursor=pointer]:
-              - /url: https://www.linkedin.com/jobs/customer-service-jobs-boydton-va?trk=homepage-basic_suggested-search
+              - /url: https://www.linkedin.com/jobs/customer-service-jobs-chicago-il?trk=homepage-basic_suggested-search
           - listitem:
             - link "Operations" [ref=e123] [cursor=pointer]:
-              - /url: https://www.linkedin.com/jobs/operations-jobs-boydton-va?trk=homepage-basic_suggested-search
+              - /url: https://www.linkedin.com/jobs/operations-jobs-chicago-il?trk=homepage-basic_suggested-search
           - listitem:
             - link "Information Technology" [ref=e124] [cursor=pointer]:
-              - /url: https://www.linkedin.com/jobs/information-technology-jobs-boydton-va?trk=homepage-basic_suggested-search
+              - /url: https://www.linkedin.com/jobs/information-technology-jobs-chicago-il?trk=homepage-basic_suggested-search
           - listitem:
             - link "Marketing" [ref=e125] [cursor=pointer]:
-              - /url: https://www.linkedin.com/jobs/marketing-jobs-boydton-va?trk=homepage-basic_suggested-search
+              - /url: https://www.linkedin.com/jobs/marketing-jobs-chicago-il?trk=homepage-basic_suggested-search
           - listitem:
             - link "Human Resources" [ref=e126] [cursor=pointer]:
-              - /url: https://www.linkedin.com/jobs/human-resources-jobs-boydton-va?trk=homepage-basic_suggested-search
+              - /url: https://www.linkedin.com/jobs/human-resources-jobs-chicago-il?trk=homepage-basic_suggested-search
         - button "Show more" [ref=e127] [cursor=pointer]: Show more
     - generic [ref=e130]:
       - heading "Post your job for millions of people to see" [level=2] [ref=e131]
@@ -263,7 +263,7 @@
               - /url: https://www.linkedin.com/pub/dir/+/+?trk=homepage-basic_brand-discovery_intent-module-firstBtn
           - listitem [ref=e205]:
             - link "Find a new job" [ref=e206] [cursor=pointer]:
-              - /url: https://www.linkedin.com/jobs/jobs-in-boydton-va?trk=homepage-basic_brand-discovery_intent-module-secondBtn
+              - /url: https://www.linkedin.com/jobs/jobs-in-chicago-il?trk=homepage-basic_brand-discovery_intent-module-secondBtn
           - listitem [ref=e207]:
             - link "Find a course or training" [ref=e208] [cursor=pointer]:
               - /url: https://www.linkedin.com/learning/search?trk=homepage-basic_brand-discovery_intent-module-thirdBtn
