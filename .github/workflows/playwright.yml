@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: write   # Required for GitHub Pages deployment
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -41,6 +44,7 @@ jobs:
   merge-reports:
     runs-on: ubuntu-latest
     needs: test
+    if: always()   # Run even if some shards failed
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -56,7 +60,12 @@ jobs:
           path: ./results
 
       - name: Merge reports
-        run: npx playwright merge-reports ./results/* --reporter=html
+        run: |
+          if ls ./results/* 1> /dev/null 2>&1; then
+            npx playwright merge-reports ./results/* --reporter=html || echo "⚠️ Merge failed, continuing"
+          else
+            echo "⚠️ No results found, skipping merge"
+          fi
 
       - name: Upload merged report
         if: always()
