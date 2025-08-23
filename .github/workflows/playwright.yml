@@ -46,14 +46,17 @@ jobs:
 
       - name: Run Playwright tests (shard ${{ matrix.shard }})
         continue-on-error: true
-        run: npx playwright test --shard=${{ matrix.shard }}/4 --reporter=line,json --output=results
+        run: |
+          # ensure per-shard output folder so JSON files don't overwrite each other
+          mkdir -p results/shard-${{ matrix.shard }}
+          npx playwright test --shard=${{ matrix.shard }}/4 --reporter=line,json --output=results/shard-${{ matrix.shard }}
 
       - name: Upload shard report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: shard-${{ matrix.shard }}
-          path: results
+          path: results/shard-${{ matrix.shard }}
 
   merge-reports:
     runs-on: ubuntu-latest
@@ -82,12 +85,27 @@ jobs:
       - name: Merge reports
         run: |
           mkdir -p merged-results
-          # Copy all JSON files from shard results into merged-results
-          find ./results -name '*.json' -exec cp {} ./merged-results/ \; || echo "⚠️ No shard results found"
-          if ls merged-results/* 1> /dev/null 2>&1; then
-            npx playwright merge-reports merged-results --reporter=html --output=playwright-report || echo "⚠️ Merge failed, check merged-results/"
+          # Collect per-shard JSON result files into a single folder
+          find ./results -type f -name '*.json' -exec cp {} ./merged-results/ \; || echo "⚠️ No shard JSON files found"
+
+          if ls merged-results/*.json 1> /dev/null 2>&1; then
+            echo "Found JSON files to merge:"
+            ls -la merged-results || true
+
+            # Try merge-reports (if available). If it fails, fallback to show-report.
+            if npx playwright merge-reports merged-results --reporter=html --output=playwright-report 2>/dev/null; then
+              echo "✅ Merged HTML report created at playwright-report/"
+            else
+              echo "ℹ️ 'merge-reports' not available or failed, trying 'show-report' fallback"
+              if npx playwright show-report merged-results --output=playwright-report 2>/dev/null; then
+                echo "✅ Fallback report created at playwright-report/"
+              else
+                echo "⚠️ Failed to generate merged report. Check contents of merged-results/"
+                ls -la merged-results || true
+              fi
+            fi
           else
-            echo "⚠️ No results found, skipping merge"
+            echo "⚠️ No JSON results found in ./results — skipping merge"
           fi
 
       - name: Upload merged report
