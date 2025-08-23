@@ -118,8 +118,23 @@ jobs:
           name: playwright-report
           path: playwright-report/
 
-      - name: Deploy report to GitHub Pages
+      - name: Verify report content
         if: always()
+        run: |
+          if [ -d playwright-report ]; then
+            echo "✅ Report directory exists"
+            ls -la playwright-report/
+            if [ -f playwright-report/index.html ]; then
+              echo "✅ index.html found, size: $(wc -c < playwright-report/index.html) bytes"
+            else
+              echo "❌ index.html not found"
+            fi
+          else
+            echo "❌ playwright-report directory not found"
+          fi
+
+      - name: Deploy report to GitHub Pages
+        if: always() && hashFiles('playwright-report/index.html') != ''
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -129,4 +144,12 @@ jobs:
         if: always()
         run: |
           echo "## ✅ Playwright Test Report" >> $GITHUB_STEP_SUMMARY
-          echo "📊 [View Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/)" >> $GITHUB_STEP_SUMMARY
+          if [ -f playwright-report/index.html ]; then
+            echo "📊 [View Report](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/)" >> $GITHUB_STEP_SUMMARY
+            echo "⬇️ [Download Report Artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts)" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Note:** GitHub Pages may take 1-2 minutes to update after deployment." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Report generation failed - no index.html found" >> $GITHUB_STEP_SUMMARY
+            echo "⬇️ [Download Debug Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts)" >> $GITHUB_STEP_SUMMARY
+          fi
